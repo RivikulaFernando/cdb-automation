@@ -13,6 +13,11 @@ def detect_car_details(image_path):
             "image": image_path
         }
     )
+    license_plate = ""
 
-    license_plate = result[0]["google_gemini"][0]["output"]
-    return license_plate
+    try:
+        license_plate = result[0]["google_gemini"][0]["output"]
+    except (KeyError, IndexError, TypeError) as e:
+        raise ValueError("Failed to extract license plate information") from e
+    finally:
+        return license_plate

@@ -3,7 +3,6 @@ from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse, JSONResponse
 from vision import detect_car_details
 from camera import capture_image
-from contextlib import asynccontextmanager
 
 app = FastAPI()
 
@@ -41,7 +40,7 @@ async def get():
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        await websocket.send_text(license_plate)
+        await websocket.send_text(str(license_plate))
         await asyncio.sleep(1)
 
 
@@ -54,7 +53,7 @@ async def capture_once():
         if file_path:
             plate = detect_car_details(file_path)
             license_plate = plate
-            print("Updated license plate:", plate)
+            print("Updated license plate:", license_plate)
             return {"status": "success", "plate": plate, "image_path": file_path}
         else:
             return JSONResponse(content={"status": "error", "message": "Failed to capture image"}, status_code=500)
