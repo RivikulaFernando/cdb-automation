@@ -12,10 +12,9 @@ license_plate = ""  # Stores the last detected plate
 
 app = FastAPI()
 
-
 # 🌐 Web Interface with live license plate view
 @app.get("/interface")
-async def get():
+async def get_interface():
     html_content = """
     <!DOCTYPE html>
     <html>
@@ -24,11 +23,17 @@ async def get():
         </head>
         <body>
             <h1>Detected Plate: <span id="live-data">...</span></h1>
+            <button onclick="capture()">Capture Now</button>
             <script>
                 const ws = new WebSocket(`ws://${location.host}/ws`);
                 ws.onmessage = function(event) {
                     document.getElementById("live-data").textContent = event.data;
                 };
+                function capture() {
+                    fetch("/capture")
+                      .then(res => res.json())
+                      .then(data => console.log("Captured:", data));
+                }
             </script>
         </body>
     </html>
