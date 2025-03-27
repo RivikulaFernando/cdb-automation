@@ -13,4 +13,6 @@ def detect_car_details(image_path):
             "image": image_path
         }
     )
-    return result
+
+    license_plate = result[0]["google_gemini"][0]["output"]
+    return license_plate

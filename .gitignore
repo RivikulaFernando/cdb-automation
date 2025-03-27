@@ -1,0 +1,41 @@
+# Byte-compiled / cached
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+*.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+*.out
+*.err
+
+# Secrets / Environment variables
+.env
+*.pem
+*.key
+
+# Python-specific temporary files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# MacOS / Linux / Windows system files
+.DS_Store
+Thumbs.db
