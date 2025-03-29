@@ -2,7 +2,7 @@ import asyncio
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse, JSONResponse
 from vision import detect_car_details
-from camera import capture_image
+from camera import AxisP5522Camera
 
 app = FastAPI()
 
@@ -10,9 +10,10 @@ license_plate = ""  # Stores the last detected plate
 
 
 app = FastAPI()
+camera = AxisP5522Camera(ip_address="169.254.40.128", username="root", password="entc")
 
 # 🌐 Web Interface with live license plate view
-@app.get("/interface")
+@app.get("/debug")
 async def get_interface():
     html_content = """
     <!DOCTYPE html>
@@ -22,9 +23,8 @@ async def get_interface():
         </head>
         <body>
             <h1>Detected Plate: <span id="live-data">...</span></h1>
-            <button onclick="capture()">Capture Now</button>
             <script>
-                const ws = new WebSocket(`ws://${location.host}/ws`);
+                const ws = new WebSocket(`wss://${location.host}/get_plate`);
                 ws.onmessage = function(event) {
                     document.getElementById("live-data").textContent = event.data;
                 };
@@ -41,7 +41,7 @@ async def get_interface():
 
 
 # 📡 WebSocket endpoint to stream live license plate
-@app.websocket("/ws")
+@app.websocket("/get_plate")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
@@ -54,7 +54,7 @@ async def websocket_endpoint(websocket: WebSocket):
 async def capture_once():
     global license_plate
     try:
-        file_path = capture_image("169.254.160.88", "root", "entc", "captures")
+        file_path = camera.capture_image()
         if file_path:
             plate = detect_car_details(file_path)
             license_plate = plate

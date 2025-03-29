@@ -1,43 +1,48 @@
 import cv2
 import os
 from datetime import datetime
+import requests
 
-def capture_image(ip_address, username, password, save_directory):
-    """
-    Capture an image from the Axis P5522 camera and save it.
-    
-    Args:
-        ip_address (str): The IP address of the camera.
-        username (str): The camera username.
-        password (str): The camera password.
-        save_directory (str): Directory where the image will be saved.
-    """
-    # Construct video stream URL
-    url = f"http://{username}:{password}@{ip_address}/mjpg/video.mjpg"
-    
-    # Open video capture
-    cap = cv2.VideoCapture(url)
-    
-    if not cap.isOpened():
-        print("Error: Unable to connect to the camera")
-        return
-    
-    # Read frame
-    ret, frame = cap.read()
-    cap.release()
-    
-    if not ret:
-        print("Error: Failed to capture image")
-        return
-    
-    # Ensure save directory exists
-    os.makedirs(save_directory, exist_ok=True)
-    
-    # Generate filename with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join(save_directory, f"capture_{timestamp}.jpg")
-    
-    # Save image
-    cv2.imwrite(filename, frame)
-    return filename
+class AxisP5522Camera:
+    def __init__(self, ip_address, username, password, save_directory="captures"):
+        """
+        Initialize the Axis P5522 Camera controller.
 
+        Args:
+            ip_address (str): The IP address of the camera.
+            username (str): The camera username.
+            password (str): The camera password.
+            save_directory (str, optional): Directory where images will be saved. Defaults to "Camera_Captures".
+        """
+        self.ip_address = ip_address
+        self.username = username
+        self.password = password
+        self.save_directory = save_directory
+
+    def capture_image(self):
+        """
+        Captures an image from the camera and saves it in the save directory.
+        """
+        url = f"http://{self.username}:{self.password}@{self.ip_address}/mjpg/video.mjpg"
+        cap = cv2.VideoCapture(url)
+        
+        if not cap.isOpened():
+            print("Error: Unable to connect to the camera")
+            return None
+        
+        ret, frame = cap.read()
+        cap.release()
+        
+        if not ret:
+            print("Error: Failed to capture image")
+            return None
+        
+        os.makedirs(self.save_directory, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = os.path.join(self.save_directory, f"capture_{timestamp}.jpg")
+        
+        cv2.imwrite(filename, frame)
+        print(f"✅ Image saved at: {filename}")
+        return filename
+
+    

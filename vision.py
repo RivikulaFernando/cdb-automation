@@ -8,7 +8,7 @@ client = InferenceHTTPClient(
 def detect_car_details(image_path):
     result = client.run_workflow(
         workspace_name="vehicle-detection-bpir9",
-        workflow_id="identification",
+        workflow_id="vehicle-details-identification",
         images={
             "image": image_path
         }
