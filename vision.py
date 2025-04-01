@@ -1,23 +1,26 @@
 from inference_sdk import InferenceHTTPClient
 
+WORKSPACE = "vehicle-detection-bpir9"
+
 client = InferenceHTTPClient(
-    api_url="http://localhost:9001", # use local inference server
+    api_url="https://detect.roboflow.com",  # use local inference server
     api_key="6RHN1gwHSxMstwkPHPPO"
 )
 
-def detect_car_details(image_path):
+
+def detect_number_plate(image_path):
     result = client.run_workflow(
-        workspace_name="vehicle-detection-bpir9",
-        workflow_id="vehicle-details-identification",
+        workflow_id="license-plate-detection",
+        workspace_name=WORKSPACE,
         images={
             "image": image_path
         }
     )
-    license_plate = ""
+    predictions = result[0]['plate'][0]["predictions"][0]
+    x = predictions["x"]
+    y = predictions["y"]
+    width = predictions["width"]
+    height = predictions["height"]
+    confidence = predictions["confidence"]
 
-    try:
-        license_plate = result[0]["google_gemini"][0]["output"]
-    except (KeyError, IndexError, TypeError) as e:
-        raise ValueError("Failed to extract license plate information") from e
-    finally:
-        return license_plate
+    return x, y, width, height, confidence
