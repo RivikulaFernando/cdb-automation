@@ -1,7 +1,8 @@
 import asyncio
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse, JSONResponse
-from vision import detect_car_details
+from ocr import recognize_license_plate
+from vision import detect_number_plate
 from camera import AxisP5522Camera
 
 app = FastAPI()
@@ -10,9 +11,12 @@ license_plate = ""  # Stores the last detected plate
 
 
 app = FastAPI()
-camera = AxisP5522Camera(ip_address="169.254.40.128", username="root", password="entc")
+camera = AxisP5522Camera(ip_address="169.254.40.128",
+                         username="root", password="entc")
 
 # 🌐 Web Interface with live license plate view
+
+
 @app.get("/debug")
 async def get_interface():
     html_content = """
@@ -56,7 +60,8 @@ async def capture_once():
     try:
         file_path = camera.capture_image()
         if file_path:
-            plate = detect_car_details(file_path)
+            x, y, width, height, confidence = detect_number_plate(file_path)
+            plate = recognize_license_plate(file_path, x, y, width, height)
             license_plate = plate
             print("Updated license plate:", license_plate)
             return {"status": "success", "plate": plate, "image_path": file_path}

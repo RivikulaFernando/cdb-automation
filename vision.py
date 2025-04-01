@@ -16,7 +16,7 @@ def detect_number_plate(image_path):
             "image": image_path
         }
     )
-    predictions = result[0]['plate'][0]["predictions"][0]
+    predictions = result[0]['plate']['predictions'][0]
     x = predictions["x"]
     y = predictions["y"]
     width = predictions["width"]

@@ -28,7 +28,7 @@ def recognize_license_plate(image_path, x, y, w, h, padding_x=15, padding_y=10):
 
     # Try different scales for better recognition
     plate_number = ""
-    for scale in [1.0, 1.5, 2.0]:
+    for scale in [1.0, 1.5, 2]:
         resized = cv2.resize(gray_plate, None, fx=scale,
                              fy=scale, interpolation=cv2.INTER_CUBIC)
         result_text = reader.readtext(resized, detail=0)
@@ -42,20 +42,11 @@ def recognize_license_plate(image_path, x, y, w, h, padding_x=15, padding_y=10):
     plate_number = re.sub(r"[^A-Z0-9 ]", "", plate_number)
     plate_number = re.sub(r"\s+", " ", plate_number).strip()  # Fix spaces
 
+    plate_number_list = plate_number.split()
+    plate_number = "-".join(plate_number_list[-2:])
+
     # If the result seems invalid, return "NOT DETECTED"
     if len(plate_number) < 7 or not any(char.isdigit() for char in plate_number):
         plate_number = "NOT DETECTED"
-
-    # Draw rectangle around the detected license plate
-    cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-
-    # Put the detected text on the image
-    cv2.putText(image, plate_number, (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX,
-                0.9, (0, 255, 0), 2)
-
-    # Display the image with the detected plate
-    cv2.imshow("License Plate Detection", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     return plate_number
