@@ -3,35 +3,38 @@ import json
 # Database of vehicles
 vehicle_db = [
     {
-        "license_no": "ABC123",
+        "license_no": "KM-5141",
         "type": "Car",
         "brand": "Toyota",
         "model": "Corolla",
-        "color": "Red",
-        "vehicle_number": "V12345",
-        "engine_number": "E67890"
+        "color": "Silver",
+        "engine_number": "3ZZ-40760431598",
+        "chassis_number": "ZZE121-8003692"
     },
     {
-        "license_no": "XYZ789",
-        "type": "Motorcycle",
+        "license_no": "KL-1234",
+        "type": "Bike",
         "brand": "Honda",
         "model": "CBR500R",
-        "color": "Black",
-        "vehicle_number": "V54321",
-        "engine_number": "E09876"
+        "color": "Red",
+        "engine_number": "CBR500R-1234567890",
+        "chassis_number": "CBR500R-0987654321"
     },
     {
-        "license_no": "LMN456",
+        "license_no": "KA-5678",
         "type": "Truck",
         "brand": "Ford",
         "model": "F-150",
         "color": "Blue",
-        "vehicle_number": "V11223",
-        "engine_number": "E33445"
+        "engine_number": "F150-9876543210",
+        "chassis_number": "F150-1234567890"
     }
+
 ]
 
 # Function to search vehicle details by license number
+
+
 def get_vehicle_details_by_license(license_no):
     for vehicle in vehicle_db:
         if vehicle["license_no"] == license_no:

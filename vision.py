@@ -25,6 +25,7 @@ def detect_number_plate(image_path):
 
     return x, y, width, height, confidence
 
+
 def detect_number_plate_vlm(image_path):
     result = client.run_workflow(
         workflow_id="license-plate-detection-gemini",
@@ -36,6 +37,7 @@ def detect_number_plate_vlm(image_path):
     plate = result[0]['results'][0]['license_plate']
 
     return plate
+
 
 def identify_vehicle_details(image_path):
     result = client.run_workflow(
@@ -54,7 +56,7 @@ def identify_vehicle_details(image_path):
     return type, brand, model, color
 
 
-def vehicle_light_conditions(image_path):
+def vehicle_lamp_conditions(image_path):
     result = client.run_workflow(
         workflow_id="vehicle-parts-segmentation",
         workspace_name=WORKSPACE,
@@ -64,6 +66,7 @@ def vehicle_light_conditions(image_path):
     )
 
     return result[0]['light_conditions']
+
 
 def get_verification_numbers(image_path):
     result = client.run_workflow(
