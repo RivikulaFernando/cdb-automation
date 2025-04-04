@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import re
 
-reader = easyocr.Reader(["en"])
+reader = easyocr.Reader(["en"],gpu=True)
 
 
 def recognize_license_plate(image_path, x, y, w, h, padding_x=15, padding_y=10):
